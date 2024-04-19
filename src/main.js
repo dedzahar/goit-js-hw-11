@@ -29,7 +29,6 @@ form.addEventListener("submit", event => {
             if (data.total == 0) {
                 iziToast.show(createMsg());
             }
-            console.log(data);
             galleryContainer.insertAdjacentHTML('beforeend', makeGallery(data.hits));
             lightbox.refresh();
             event.target.reset();
