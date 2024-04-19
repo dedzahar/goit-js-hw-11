@@ -1,10 +1,17 @@
-import makeFetch from "./js/pixabay-api"
+import makeFetch from "./js/pixabay-api";
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 import makeGallery from "./js/render-functions";
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const form = document.querySelector(".search-form");
 const galleryContainer = document.querySelector(".gallery");
+const lightbox = new SimpleLightbox(".gallery a", { 
+    overlayOpacity: 0.8,
+    captionsData: "alt",
+    captionDelay: 250
+ });
 
 form.addEventListener("submit", event => {
     event.preventDefault();
@@ -19,7 +26,8 @@ form.addEventListener("submit", event => {
                 iziToast.show(createEmptyMsg());
             }
             galleryContainer.insertAdjacentHTML('beforeend', makeGallery(data.hits));
-
+            lightbox.refresh();
+            event.target.reset();
             console.log(data);
     })
     console.log(searchString);
