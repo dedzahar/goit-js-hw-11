@@ -11,7 +11,9 @@ const lightbox = new SimpleLightbox(".gallery a", {
     overlayOpacity: 0.8,
     captionsData: "alt",
     captionDelay: 250
- });
+});
+const loader = document.querySelector(".loader");
+loader.style.display = "none";
 
 form.addEventListener("submit", event => {
     event.preventDefault();
@@ -19,23 +21,30 @@ form.addEventListener("submit", event => {
     if (searchString === "") {
         return;
     }
+    loader.style.display = "block";
     galleryContainer.innerHTML = "";
+    loader.style
     makeFetch(searchString)
         .then(data => {
             if (data.total == 0) {
-                iziToast.show(createEmptyMsg());
+                iziToast.show(createMsg());
             }
+            console.log(data);
             galleryContainer.insertAdjacentHTML('beforeend', makeGallery(data.hits));
             lightbox.refresh();
             event.target.reset();
-            console.log(data);
-    })
-    console.log(searchString);
+        })
+        .catch(error => {
+            iziToast.show(createMsg(error.message));
+        })
+        .finally(() => {
+            loader.style.display = "none";
+        });
 })
 
-function createEmptyMsg() {
+function createMsg(msg = "") {
     return {
-        message: "Sorry, there are no images matching your search query. Please try again!",
+        message: msg == "" ? "Sorry, there are no images matching your search query. Please try again!" : msg,
         messageColor: '#fff',
         backgroundColor: '#EF4040',
         position: 'topRight',
